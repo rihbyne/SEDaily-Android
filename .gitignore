@@ -179,3 +179,4 @@ $RECYCLE.BIN/
 *.lnk
 app/src/main/res/raw/third_party_license_metadata
 app/src/main/res/raw/third_party_licenses
+app/schemas/com.koalatea.thehollidayinn.softwareengineeringdaily.data.AppDatabase/2.json
