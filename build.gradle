@@ -2,12 +2,12 @@
 
 buildscript {
   repositories {
-    jcenter()
     google()
     mavenCentral()
     maven {
       url 'https://maven.fabric.io/public'
     }
+    jcenter()
   }
   dependencies {
     // NOTE: Do not place your application dependencies here; they belong
@@ -23,10 +23,10 @@ buildscript {
 
 allprojects {
   repositories {
-    jcenter()
     maven { url "https://jitpack.io" }
     google()
     mavenCentral()
+    jcenter()
   }
 }
 

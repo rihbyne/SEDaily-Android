@@ -41,6 +41,7 @@ android {
         debug {
             applicationIdSuffix ".debug"
             testCoverageEnabled true
+            buildConfigField "String", 'BASE_URL', "\"https://software-enginnering-daily-api.herokuapp.com/api/\""
         }
 
         dev {

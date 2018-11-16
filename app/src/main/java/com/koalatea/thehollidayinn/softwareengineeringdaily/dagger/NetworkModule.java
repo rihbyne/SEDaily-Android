@@ -32,12 +32,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class NetworkModule {
-    String baseUrl =  "https://software-enginnering-daily-api.herokuapp.com/api/";
+    //production
+//    String baseUrl =  "https://software-enginnering-daily-api.herokuapp.com/api/";
     // Staging
 //    String baseUrl = "https://sedaily-backend-staging.herokuapp.com/api/";
 
     // Local
-//    String baseUrl = "http://192.168.1.251:4040/api/";
+    String baseUrl = BuildConfig.BASE_URL;
 
 //    public NetworkModule(String baseUrl) {
 //        this.baseUrl = baseUrl;
