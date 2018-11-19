@@ -41,7 +41,7 @@ android {
         debug {
             applicationIdSuffix ".debug"
             testCoverageEnabled true
-            buildConfigField "String", 'BASE_URL', "\"https://software-enginnering-daily-api.herokuapp.com/api/\""
+            buildConfigField "String", 'BASE_URL', "\"http://192.168.254.14:4040/api/\""
         }
 
         dev {
@@ -49,6 +49,8 @@ android {
             applicationIdSuffix ".dev"
             testCoverageEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", 'BASE_URL', "\"http://192.168.254.14:4040/api/\""
+
         }
     }
 

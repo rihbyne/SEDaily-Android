@@ -1,8 +1,6 @@
 package com.koalatea.thehollidayinn.softwareengineeringdaily;
 
-import android.app.Fragment;
 import android.app.SearchManager;
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -66,7 +64,6 @@ public class MainActivity extends PlaybackControllerActivity
     private Toolbar toolbar;
     private SecondaryDrawerItem subscribeItem;
     private SecondaryDrawerItem loginItem;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

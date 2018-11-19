@@ -28,6 +28,15 @@ import io.reactivex.subjects.PublishSubject;
 class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.ViewHolder> {
   private List<Post> posts = new ArrayList<>();
   private final PublishSubject<Post> onClickSubject = PublishSubject.create();
+  private ToggleLayoutView mToggleLayoutView;
+
+  public PodcastAdapter() {
+      this(null);
+  }
+
+  public PodcastAdapter(ToggleLayoutView toggleLayoutView) {
+      mToggleLayoutView = toggleLayoutView;
+  }
 
   static class ViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.card_title)
@@ -54,7 +63,9 @@ class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.ViewHolder> {
   public PodcastAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                  int viewType) {
     final View view =  LayoutInflater.from(parent.getContext())
-      .inflate(R.layout.fragment_podcast_grid, parent, false);
+      .inflate(mToggleLayoutView.getGridViewState()?
+              R.layout.fragment_podcast_grid:
+              R.layout.fragment_podcast_list, parent, false);
 
     final ViewHolder viewHolder = new ViewHolder(view);
 

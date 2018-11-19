@@ -29,10 +29,9 @@ import timber.log.Timber;
  * Created by keithholliday on 2/4/18.
  */
 
-public class TopRecListFragment extends Fragment {
+public class TopRecListFragment extends SwitchableListGridView {
     private String title;
     private String tagId;
-    private PodcastAdapter podcastAdapter;
     private DisposableObserver<String> myDisposableObserver;
     private RecyclerViewSkeletonScreen skeletonScreen;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -59,28 +58,17 @@ public class TopRecListFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-        RecyclerView recyclerView = getRecycleView(rootView);
-        setUpSkeletonLoading(recyclerView, rootView);
+        mRecyclerView = getRecycleView(rootView);
+        setUpSkeletonLoading(mRecyclerView, rootView);
         setUpViewModel();
         this.setUpSubscription();
 
         return rootView;
     }
 
-    private RecyclerView getRecycleView(View rootView) {
-        RecyclerView recyclerView = rootView.findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        GridLayoutManager mLayoutManager = new GridLayoutManager(this.getContext(), 2);
-        recyclerView.setLayoutManager(mLayoutManager);
-        podcastAdapter = new PodcastAdapter();
-        recyclerView.setAdapter(podcastAdapter);
-
-        return recyclerView;
-    }
-
     private void setUpSkeletonLoading(RecyclerView recyclerView, View rootView) {
         skeletonScreen = Skeleton.bind(recyclerView)
-                .adapter(podcastAdapter)
+                .adapter(mPodcastAdapter)
                 .load(R.layout.item_skeleton_news)
                 .shimmer(true)
                 .show();
@@ -125,7 +113,7 @@ public class TopRecListFragment extends Fragment {
         FilterRepository filterRepository = FilterRepository.getInstance();
         filterRepository.getModelChanges().subscribe(myDisposableObserver);
 
-        podcastAdapter.getPositionClicks()
+        mPodcastAdapter.getPositionClicks()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ReactiveUtil.toDetailObservable(getActivity()));
@@ -147,7 +135,7 @@ public class TopRecListFragment extends Fragment {
     }
 
     private void updatePosts(List<Post> postList) {
-        podcastAdapter.setPosts(postList);
+        mPodcastAdapter.setPosts(postList);
         swipeRefreshLayout.setRefreshing(false);
         skeletonScreen.hide();
     }

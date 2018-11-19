@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -42,10 +46,9 @@ import io.reactivex.schedulers.Schedulers;
  * Created by krh12 on 5/22/2017.
  */
 
-public class PodListFragment extends Fragment {
+public class PodListFragment extends SwitchableListGridView {
   private String title;
   private String tagId;
-  private PodcastAdapter podcastAdapter;
   private DisposableObserver<String> myDisposableObserver;
   private RecyclerViewSkeletonScreen skeletonScreen;
   private SwipeRefreshLayout swipeRefreshLayout;
@@ -61,13 +64,26 @@ public class PodListFragment extends Fragment {
   }
 
   @Override
+  public RecyclerView getRecycleView(View rootView) {
+        RecyclerView recyclerView = super.getRecycleView(rootView);
+        mPodcastAdapter.getPositionClicks()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ReactiveUtil.toDetailObservable(getActivity()));
+
+        return recyclerView;
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
-    View rootView = inflater.inflate(
+      View rootView = inflater.inflate(
       R.layout.fragment_podcast_horizontal, container, false);
 
-    RecyclerView recyclerView  = getRecylceView(rootView);
-    createSkeltonScreen(recyclerView);
+    //RecyclerView recyclerView  = getRecycleView(rootView);
+
+    mRecyclerView = getRecycleView(rootView);
+    createSkeltonScreen(mRecyclerView);
     setUpSwipeRefresh(rootView);
     setUpViewModel();
     this.setUpSubscription();
@@ -75,26 +91,9 @@ public class PodListFragment extends Fragment {
     return rootView;
   }
 
-  private RecyclerView getRecylceView(View rootView) {
-    RecyclerView recyclerView = rootView.findViewById(R.id.my_recycler_view);
-    recyclerView.setHasFixedSize(true);
-
-    GridLayoutManager mLayoutManager = new GridLayoutManager(this.getContext(), 2);
-    recyclerView.setLayoutManager(mLayoutManager);
-
-    podcastAdapter = new PodcastAdapter();
-    recyclerView.setAdapter(podcastAdapter);
-    podcastAdapter.getPositionClicks()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(ReactiveUtil.toDetailObservable(getActivity()));
-
-    return recyclerView;
-  }
-
   private void createSkeltonScreen(RecyclerView recyclerView) {
     skeletonScreen = Skeleton.bind(recyclerView)
-            .adapter(podcastAdapter)
+            .adapter(this.mPodcastAdapter)
             .load(R.layout.item_skeleton_news)
             .shimmer(true)
             .show();
@@ -171,7 +170,7 @@ public class PodListFragment extends Fragment {
   }
 
   private void updatePosts(List<Post> postList) {
-    podcastAdapter.setPosts(postList);
+    this.mPodcastAdapter.setPosts(postList);
     swipeRefreshLayout.setRefreshing(false);
     skeletonScreen.hide();
   }
@@ -209,7 +208,7 @@ public class PodListFragment extends Fragment {
     insertBookmarks(bookmarks);
 
     podcastListViewModel.setPostList(posts);
-    podcastAdapter.setPosts(posts);
+    this.mPodcastAdapter.setPosts(posts);
   }
 
   private void insertBookmarks(ArrayList<Bookmark> bookmarks) {
@@ -238,7 +237,7 @@ public class PodListFragment extends Fragment {
 
         @Override
         public void onNext(List<Post> posts) {
-          podcastAdapter.setPosts(posts);
+          mPodcastAdapter.setPosts(posts);
 
           PostRepository postRepository = PostRepository.getInstance();
           postRepository.setPosts(posts);

@@ -11,6 +11,7 @@
 
     <string name="logout">Logout</string>
     <string name="search">Search</string>
+    <string name="list_grid_view">List/Grid view</string>
     <string name="label_pause">Pause</string>
     <string name="label_play">Play</string>
     <string name="open_source_info">Open Source Info</string>
