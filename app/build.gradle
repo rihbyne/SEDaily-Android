@@ -1,0 +1,212 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+//apply plugin: 'com.google.gms.oss.licenses.plugin'
+apply plugin: 'project-report'
+apply plugin: 'io.fabric'
+apply plugin: 'jacoco-android'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+    defaultConfig {
+        applicationId "com.koalatea.thehollidayinn.softwareengineeringdaily"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 30
+        versionName "1.5.7"
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //Note this will be deprecated soon....
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            applicationIdSuffix ".debug"
+            testCoverageEnabled true
+        }
+
+        dev {
+            minifyEnabled false
+            applicationIdSuffix ".dev"
+            testCoverageEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/rxjava.properties'
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        main.java.srcDirs += 'src/main/java'
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    lintOptions {
+        htmlReport true
+    }
+}
+
+jacocoAndroidUnitTestReport {
+    csv.enabled false
+    html.enabled true
+    xml.enabled true
+    excludes += ['**/AutoValue_*.*',
+                 '**/*JavascriptBridge.class']
+}
+
+def build_param = "${build}"
+if (build_param != "dev") {
+    //exclude dev build
+    android.variantFilter { variant ->
+        if (variant.buildType.name.equals('dev')) {
+            variant.setIgnore(true)
+        }
+    }
+} else {
+    //exclude all except dev build
+    android.variantFilter { variant ->
+        if (!variant.buildType.name.equals('dev')) {
+            variant.setIgnore(true)
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation 'com.android.support:multidex:1.0.3'
+
+    // Android
+    implementation "com.android.support:design:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support.constraint:constraint-layout:$rootProject.constraintlayoutVersion"
+    implementation "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+
+    // Android Architecture
+    implementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    implementation "android.arch.lifecycle:runtime:$rootProject.architectureComponents"
+    implementation "android.arch.lifecycle:extensions:$rootProject.architectureComponents"
+    kapt "android.arch.lifecycle:common-java8:$rootProject.architectureComponents"
+
+    // Audio
+    implementation 'com.google.android.exoplayer:exoplayer:r2.5.4'
+    
+    //Persistence
+    implementation "android.arch.persistence.room:runtime:$rootProject.androidRoomRersistenceVersion"
+    kapt "android.arch.persistence.room:compiler:$rootProject.androidRoomRersistenceVersion"
+
+    //Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$rootProject.kotlinVersion"
+    //Rx Java
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroid2Version"
+    //Network
+    implementation "com.squareup.okhttp3:okhttp:$rootProject.okhttp3Version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp3Version"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofit2Version"
+
+    //Presentation
+    implementation "com.squareup.picasso:picasso:$rootProject.picassoVersion"
+//    implementation "com.google.android.gms:play-services-oss-licenses:$rootProject.playVersion"
+    implementation 'com.ethanhua:skeleton:1.0.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    // Downloads
+    implementation 'com.mindorks.android:prdownloader:0.4.0'
+
+    //UI
+    implementation "com.github.pchmn:MaterialChipsInput:$rootProject.materialChipsVersion"
+    implementation "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
+    kapt "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
+    implementation "blue.aodev:material-values:$rootProject.materialValuesVersion"
+    implementation("com.mikepenz:materialdrawer:6.0.5@aar") {
+        transitive = true
+    }
+    implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
+    implementation 'com.github.ohoussein.playpauseview:playpauseview:1.0.2'
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+
+    //Firebase
+    implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+        transitive = true
+    }
+    implementation "com.google.firebase:firebase-core:$rootProject.firebaseServicesVersion"
+    implementation "com.google.firebase:firebase-crash:$rootProject.firebaseServicesVersion"
+
+    //  Dagger
+    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    kaptTest "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+
+    //Logging
+    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+    implementation "com.akaita.java:rxjava2-debug:$rootProject.rxjava2Debug"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakCanaryVersion"
+    devImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakCanaryVersion"
+    //Data
+    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+    compileOnly "com.google.auto.value:auto-value:$rootProject.autoValueVersion"
+    kapt "com.google.auto.value:auto-value:$rootProject.autoValueVersion"
+    compileOnly "com.ryanharter.auto.value:auto-value-gson:$rootProject.autoValueGsonVersion"
+    kapt "com.ryanharter.auto.value:auto-value-gson:$rootProject.autoValueGsonVersion"
+    //Payments
+    implementation 'com.stripe:stripe-android:6.0.0'
+
+    // Rating
+    implementation 'com.github.hotchemi:android-rate:1.0.1'
+
+    //Testing
+    testImplementation "junit:junit:$rootProject.junitVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$rootProject.kotlinVersion"
+    testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    testImplementation "android.arch.core:core-testing:$rootProject.architectureComponents"
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+}
+apply plugin: 'com.google.gms.google-services'
+
+apply plugin: 'kotlin-android-extensions'

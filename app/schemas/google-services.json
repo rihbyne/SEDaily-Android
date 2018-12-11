@@ -1,0 +1,45 @@
+{
+  "project_info": {
+    "project_number": "1010402520523",
+    "firebase_url": "https://sedailycontrib.firebaseio.com",
+    "project_id": "sedailycontrib",
+    "storage_bucket": "sedailycontrib.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010402520523:android:d026ad44ce5fd8c3",
+        "android_client_info": {
+          "package_name": "com.koalatea.thehollidayinn.softwareengineeringdaily.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1010402520523-8pnvqu4skca4fet1b2ubvde8sa25v8ks.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjX6xwG6lv34Wrb8fFGPE_gSZoLWr5lzo"
+        },
+        {
+          "current_key": "AIzaSyDjX6xwG6lv34Wrb8fFGPE_gSZoLWr5lzo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
