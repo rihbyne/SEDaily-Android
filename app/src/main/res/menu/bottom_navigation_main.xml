@@ -25,4 +25,9 @@
         android:icon="@drawable/ic_bookmark"
         android:title="@string/bookmarks"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_profile"
+        android:enabled="true"
+        android:title="Profile"
+        app:showAsAction="ifRoom" />
 </menu>

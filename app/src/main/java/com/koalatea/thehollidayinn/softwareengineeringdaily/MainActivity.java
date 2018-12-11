@@ -1,6 +1,8 @@
 package com.koalatea.thehollidayinn.softwareengineeringdaily;
 
+import android.app.Fragment;
 import android.app.SearchManager;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.koalatea.thehollidayinn.softwareengineeringdaily.app.SEDApp;
 import com.koalatea.thehollidayinn.softwareengineeringdaily.auth.LoginRegisterActivity;
@@ -64,6 +69,10 @@ public class MainActivity extends PlaybackControllerActivity
     private Toolbar toolbar;
     private SecondaryDrawerItem subscribeItem;
     private SecondaryDrawerItem loginItem;
+    private SecondaryDrawerItem profileItem;
+    private ImageButton mPhotoButton;
+    private ImageView mPhotoView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +158,7 @@ public class MainActivity extends PlaybackControllerActivity
         loginItem = new SecondaryDrawerItem().withIdentifier(4).withIcon(GoogleMaterial.Icon.gmd_perm_identity).withName(R.string.login);
         subscribeItem = new SecondaryDrawerItem().withIdentifier(5).withIcon(GoogleMaterial.Icon.gmd_monetization_on).withName(R.string.subscribe);
 
+
         SecondaryDrawerItem bookmarkItem = new SecondaryDrawerItem().withIdentifier(6).withIcon(GoogleMaterial.Icon.gmd_bookmark).withName(R.string.bookmarks);
         SecondaryDrawerItem downloadItem = new SecondaryDrawerItem()
                 .withIdentifier(8)
@@ -158,6 +168,9 @@ public class MainActivity extends PlaybackControllerActivity
                 .withIdentifier(7)
                 .withIcon(GoogleMaterial.Icon.gmd_notifications)
                 .withName("Notifications");
+        SecondaryDrawerItem profileItem = new SecondaryDrawerItem()
+                .withIdentifier(9).withIcon(GoogleMaterial.Icon.gmd_camera_enhance)
+                .withName("Profile");
 
         AccountHeaderBuilder accountHeaderBuilder = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -201,6 +214,7 @@ public class MainActivity extends PlaybackControllerActivity
                         bookmarkItem,
                         // downloadItem,
                         notificationItem,
+                        profileItem,
                         new DividerDrawerItem(),
                         loginItem,
                         subscribeItem
@@ -293,6 +307,14 @@ public class MainActivity extends PlaybackControllerActivity
                         .replace(R.id.fragment_container, fragment)
                         .commit();
                 break;
+            case 9:
+                //Toast toast = Toast.makeText(getApplicationContext(), "Before Intent", Toast.LENGTH_SHORT); toast.show();
+                Intent i = new Intent(MainActivity.this,Profile.class);
+                startActivity(i);
+                //startActivity(new Intent(this, Profile.class));
+                //Toast toast = Toast.makeText(getApplicationContext(), "after  intent", Toast.LENGTH_SHORT); toast.show();
+                break;
+
         }
 
         return true;
